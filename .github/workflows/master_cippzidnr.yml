@@ -1,7 +1,7 @@
-
+# Docs for the Azure Web Apps Deploy action: https://github.com/azure/functions-action
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Powershell project to Azure Function App - cippkdsva
+name: Build and deploy Powershell project to Azure Function App - cippzidnr
 
 on:
   push:
@@ -15,16 +15,26 @@ env:
 jobs:
   deploy:
     runs-on: windows-latest
-    
+    permissions:
+      id-token: write #This is required for requesting the JWT
+      contents: read #This is required for actions/checkout
+
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@v4
       
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_AACF30B3625845EBA5FAAC32638D67AD }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_24ADEE6C61984089956220C9EEDE222E }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_FFAEEE0E3A06407D91C949E76A0F9EE8 }}
+
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: 'cippkdsva'
+          app-name: 'cippzidnr'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9BFC7AE407A849B7AC30AC56DFA1F49E }}
+          
